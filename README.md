@@ -22,7 +22,7 @@ Paso 2: Entrega del mensaje a Alicia
 Paso 3: Verificación
 -----------------------------
     - Alica elige un número random R en el mismo rango que A, y prueba que el máximo común divisor(R, P-1) = 1. Que es lo mismo que X               congruente con A^R mod P
-    -Alice devuelve el certificado que ella crea CertAlice = (IDAlice, V, S)
+    - Alice devuelve el certificado que ella crea CertAlice = (IDAlice, V, S)
     - Alice manda X a Bob
     - Bob verifica la firma de Alice y envia TRUE si lo es. Además, elige un número random E en el rango 1 < E < 2. Y se lo manda a Alice
     - Alicia calcula Y congruente con A*E+R mod P-1.
