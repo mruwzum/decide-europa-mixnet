@@ -1,31 +1,96 @@
-Proceso de las ZKP
+Plataforma voto electrónico educativa
 =====================================
-Para explicar las ZKP (pruebas de cero conocimiento) se utilizará una analogía con Bob y Alice dónde se explicará a profuncidad el funcionamiento del algoritmo que hemos implementado. En este ejemplo se plantea la existencia de una cueva circular en la que hay una puerta cerrada con llave. La prueba de cero conocimiento consiste en que Alice entra en la cueva mientras Bob espera fuera. Una vez Alice ha entrado en la cueva Bob se acerca a la bifurcación y grita una salida derecha o izquierda que deberá tomar Alice. Si Alice conoce el secreto (posee la llave) podrá salir siempre por la salida que indique Bob. De esta manera se Alice ha demostrado a Bob que conoce el secreto sin enseñar la llave.
 
-Paso 1: Bob elige los siguientes 4 parametros
--------------------------------------------------
-- Un primo P largo de tal forma que la descomposición de ese primo sea intratable
-- Saca también un parámetro de seguridad T, de tal forma que P >= 2^t. Normalmente con t = 40 es una seguridad adecuada
-- Bob establece una firma segura con un algortimo secreto de firma que es Firma(Bob) y un algoritmo de verificaión SHA2
-- Una función segura de Hash para hashear el mensaje antes de firmarlo
+El objetivo de este proyecto es implementar una plataforma de voto
+electrónico seguro, que cumpla una serie de garantías básicas, como la
+anonimicidad y el secreto del voto.
 
-
-Paso 2: Entrega del mensaje a Alicia
-------------------------------------------
-- Bob establece la identidad de Alice como el certificado de nacimiento o el pasaporte, y crea un String IDAlice
-- Alicia elige un exponente random A. De tal forma que 0<=A<=P-2
-- Alicia calcula V que es congrunte con el generador V=ALFA-A mod P
-- Devuelve V a Bob
-- Bob genera una firma (S = IDAlice, V). Y le da el certificado que es Cert=(IDAlice, V, S)
+Se trata de un proyecto educativo, pensado para el estudio de sistemas de
+votación, por lo que prima la simplicidad por encima de la eficiencia
+cuando sea posible. Por lo tanto se asumen algunas carencias para permitir
+que sea entendible y extensible.
 
 
-Paso 3: Verificación
------------------------------
-    - Alica elige un número random R en el mismo rango que A, y prueba que el máximo común divisor(R, P-1) = 1. Que es lo mismo que X               congruente con A^R mod P
-    - Alice devuelve el certificado que ella crea CertAlice = (IDAlice, V, S)
-    - Alice manda X a Bob
-    - Bob verifica la firma de Alice y envia TRUE si lo es. Además, elige un número random E en el rango 1 < E < 2. Y se lo manda a Alice
-    - Alicia calcula Y congruente con A*E+R mod P-1.
-    - Alicia envía Y a Bob
-    - Bob calcula Z congruente con ALFA^Y * V^E mod P
-    - Bob acepta que es verdadero si Z = X
+Subsistemas, apps y proyecto base
+---------------------------------
+
+El proyecto se divide en [subsistemas](doc/subsistemas.md), los cuales estarán desacoplados
+entre ellos. Para conseguir esto, los subsistemas se conectarán entre si mediante API y necesitamos un proyecto base donde configurar las ruts de estas API.
+
+Este proyecto Django estará dividido en apps (subsistemas y proyecto base), donde cualquier app podrá ser reemplazada individualmente.
+
+
+Configurar y ejecutar el proyecto
+---------------------------------
+
+Para configurar el proyecto, podremos crearnos un fichero local_settings.py basado en el
+local_settings.example.py, donde podremos configurar la ruta de nuestras apps o escoger que módulos
+ejecutar.
+
+Una vez hecho esto, será necesario instalar las dependencias del proyecto, las cuales están en el
+fichero requirements.txt:
+
+    pip install -r requirements.txt
+
+Tras esto tendremos que crearnos nuestra base de datos con postgres:
+
+    sudo su - postgres
+    psql -c "create user decide with password 'decide'"
+    psql -c "create database decide owner decide"
+
+Entramos en la carpeta del proyecto (cd decide) y realizamos la primera migración para preparar la
+base de datos que utilizaremos:
+
+    ./manage.py migrate
+
+Por último, ya podremos ejecutar el módulos o módulos seleccionados en la configuración de la
+siguiente manera:
+
+    ./manage.py runserver
+
+Ejecutar con docker
+-------------------
+
+Existe una configuración de docker compose que lanza 3 contenedores, uno
+para el servidor de base de datos, otro para el django y otro con un
+servidor web nginx para servir los ficheros estáticos y hacer de proxy al
+servidor django:
+
+ * decide\_db
+ * decide\_web
+ * decide\_nginx
+
+Además se crean dos volúmenes, uno para los ficheros estáticos y medias del
+proyecto y otro para la base de datos postgresql, de esta forma los
+contenedores se pueden destruir sin miedo a perder datos:
+
+ * decide\_db
+ * decide\_static
+
+Se puede editar el fichero docker-settings.py para modificar el settings
+del proyecto django antes de crear las imágenes del contenedor.
+
+Crear imágenes y lanzar contenedores:
+
+    $ cd docker
+    $ docker-compose up -d
+
+Parar contenedores:
+
+    $ docker-compose down
+
+Crear un usuario administrador:
+
+    $ docker exec -ti decide_web ./manage.py createsuperuser
+
+Lanzar la consola django:
+
+    $ docker exec -ti decide_web ./manage.py shell
+
+Lanzar tests:
+
+    $ docker exec -ti decide_web ./manage.py test
+
+Lanzar una consola SQL:
+
+    $ docker exec -ti decide_db ash -c "su - postgres -c 'psql postgres'"
