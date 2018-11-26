@@ -15,6 +15,20 @@
     </div>
 
     <div id="voting">
+    
+    	{% if start_date == None%}
+        	<p>La votación no ha empezado aún</p>
+        
+        {%else%}
+        	<p>La votación empezó el: {{ start_date }}</p>
+	        
+	        {%if end_date == None%}
+	        	<p>Aún puede votar, no ha finalizado la votación</p>
+	        {% else %}
+	        	<p>Ya no puede votar, la votación se cerró el: {{ end_date }}</p>
+        	 {% endif %}
+        	 
+        {% endif %}
         <a href="#" onClick="decideLogout()">{% trans "logout" %}</a>
         <h2>{{ voting.question.desc }}</h2>
 
