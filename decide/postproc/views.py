@@ -16,6 +16,9 @@ class PostProcView(APIView):
         out.sort(key=lambda x: -x['postproc'])
         return Response(out)
 
+    def dhondt(self, options):
+        return Response({})
+
     def post(self, request):
         """
          * type: IDENTITY | EQUALITY | WEIGHT
@@ -34,5 +37,8 @@ class PostProcView(APIView):
 
         if t == 'IDENTITY':
             return self.identity(opts)
+
+        else if t == 'DHONDT':
+            return self.dhondt(opts)            
 
         return Response({})
