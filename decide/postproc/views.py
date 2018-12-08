@@ -17,25 +17,16 @@ class PostProcView(APIView):
         return Response(out)
 
     def dhondt(self, options):
-        out = options.copy()
-        aux = [0]*len(options)
         seats = 8
-        i=0
 
-        while i<seats:
-            votes=-1
-            for index, opt in enumerate(out):
-                if(opt['votes']/(aux[index]+1)>votes):
-                    votes = opt['votes']/(aux[index]+1)
-                    best = index
+        for opt in options:
+            opt['seats'] = 0
 
-            aux[best] = aux[best]+1
-            i++
-        
-        for index, opt in enumerate(out):
-            opt['seats'] = aux[index]
+        for i in range(seats):
+            max(options, 
+                key = lambda x : x['votes'] / (x['seats'] + 1.0))['seats'] += 1
 
-        return Response(out)
+        return Response(options)
 
     def post(self, request):
         """
