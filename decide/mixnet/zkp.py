@@ -52,8 +52,10 @@ def generador_módulo_aleatorio_mio():
 		yield a
 		num += 1
 
+
 class testSetUp:
-	
+	#Inicialización de las variables que se van a utilizar a lo largo de la
+	#ejecución de las pruebas de cero conocimiento.
 	def __init__(self, modbits, k, semilla):
 		self.k = k
 		granPrimo = sympy.randprime(0, 1000000)
@@ -68,16 +70,12 @@ class testSetUp:
 		self.n = self.p*self.q
 		print("n = "+str(self.n))
 		self.a = list(generador_módulo_aleatorio(k, self.n))
-		# self.a = list(generador_módulo_aleatorio_mio())
 		assert sum([gcd(i, self.n) for i in self.a]) == len(self.a)
-		#print(self.a)
-		#print(type(self.a))
-		#self.asq = [print(type(i)) for i in self.a]
 		self.asq = [i**(2, self.n) for i in self.a]
 		#print(asq)
 		
+#Parte del algoritmo que se encarga de verificar la integridad de las claves	
 class Alice:
-	
 	def __init__(self, n, sk):
 		self.n = n
 		self.sk = sk
@@ -106,7 +104,7 @@ class Alice:
 		
 
 class Bob:
-	
+	#Entidad que verifica el correcto funcionamiento de las pruebas de cero conocimeinto
 	def __init__(self, n, vk):
 		self.n = n
 		self.vk = vk
