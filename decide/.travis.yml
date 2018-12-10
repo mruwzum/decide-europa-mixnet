@@ -6,19 +6,23 @@ env:
 before_install:
 - cd decide
 install:
-- pip install -r ../requirements.txt
+- pip3 install -r ../requirements.txt
 script:
- - python3 zkp.py
+- cd mixnet
+- python3 zkp.py
+- cd ..
 services:
   - postgresql
 addons:
   postgresql: "9.6"
 global:
   - PGPORT=5432
-
 before_script:
  - cd .. cp local_settings.travis.py local_settings.py
  - cd decide
  - psql -c "create user decide with password 'decide'"
  - psql -c "create database decide owner decide"
  - python3 manage.py migrate
+ - cd mixnet
+ - python3 zkp.py
+ - cd ..
