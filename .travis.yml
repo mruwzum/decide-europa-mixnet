@@ -9,7 +9,9 @@ before_install:
 install:
 - pip install -r ../requirements.txt
 script:
+ - cd mixnet
  - python3 zkp.py
+ - cd ..
 services:
   - postgresql
 addons:
