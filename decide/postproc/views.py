@@ -16,9 +16,7 @@ class PostProcView(APIView):
         out.sort(key=lambda x: -x['postproc'])
         return Response(out)
 
-    def dhondt(self, options):
-        seats = 8
-
+    def dhondt(self, options, seats):
         for opt in options:
             opt['seats'] = 0
 
@@ -48,6 +46,7 @@ class PostProcView(APIView):
             return self.identity(opts)
 
         else if t == 'DHONDT':
-            return self.dhondt(opts)            
+            seats = int(float(request.data.get('seats', '8')))
+            return self.dhondt(opts,seats)            
 
         return Response({})
