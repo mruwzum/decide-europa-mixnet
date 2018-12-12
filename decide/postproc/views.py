@@ -24,6 +24,7 @@ class PostProcView(APIView):
             max(options, 
                 key = lambda x : x['votes'] / (x['seats'] + 1.0))['seats'] += 1
 
+        options.sort(key=lambda x: -x['seats'])
         return Response(options)
 
     def post(self, request):
@@ -45,7 +46,7 @@ class PostProcView(APIView):
         if t == 'IDENTITY':
             return self.identity(opts)
 
-        else if t == 'DHONDT':
+        elif t == 'DHONDT':
             seats = int(float(request.data.get('seats', '8')))
             return self.dhondt(opts,seats)            
 
