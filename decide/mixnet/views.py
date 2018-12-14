@@ -145,4 +145,9 @@ class zkpView(TemplateView):
         context = super().get_context_data()
         return context
 
+def zkp(request):
+    pruebas = ['hola', 'adios']
+    context = {'pruebas':pruebas}
+    return render(request, 'zkp.html', context)
+
 
