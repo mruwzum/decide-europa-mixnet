@@ -9,7 +9,7 @@ from .models import Auth, Mixnet, Key
 from base.serializers import KeySerializer, AuthSerializer
 
 from django.shortcuts import render
-
+from django.views.generic import TemplateView
 #entorno virtual source /home/naitcode/Escritorio/decide-europa-mixnet/decide-env/bin/activate
 class MixnetViewSet(viewsets.ModelViewSet):
     """
@@ -138,10 +138,11 @@ class Decrypt(APIView):
             msgs = resp
 
         return  Response(msgs)
-    
-def zkp(request):
-    pruebas = ['hola', 'adios']
-    context = {'pruebas':pruebas}
-    return render(request, 'mixnet/zkp.html', context)
+
+class zkpView(TemplateView): 
+    template_name = "zkp.html"
+    def get_context_data(self):
+        context = super().get_context_data()
+        return context
 
 
