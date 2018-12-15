@@ -161,10 +161,29 @@ iterations = 20
 primePrime = sympy.randprime(0, 9999999999)
 semilla = int(round(time.time() * primePrime))
 
+  
+def generador_módulo_aleatorio(k, módulo):
+    num = 0
+    granPrimo = sympy.randprime(0, 1000000)
+    while(num < k):
+        a = mod(granPrimo, módulo)
+        while(gcd(a, módulo) != 1):
+            a = mod(granPrimo, módulo)
+        yield a
+        num += 1
+
+def generador_módulo_aleatorio_mio():
+    num = 0
+    while(num < k):
+        a = np.int64(num)
+        yield a
+        num += 1
+
+
 class testSetUp(object):
 	#Inicialización de las variables que se van a utilizar a lo largo de la
 	#ejecución de las pruebas de cero conocimiento.
-	def __init__(self, modbits, k, semilla, get_response):
+	def __init__(self, modbits, k, semilla):
 		self.k = k
 		granPrimo = sympy.randprime(0, 1000000)
 		random.seed(semilla)
@@ -177,7 +196,7 @@ class testSetUp(object):
 			print("Los primos son iguales. Por favor, ejecútalo de nuevo.")
 		self.n = self.p*self.q
 		print("n = "+str(self.n))
-		self.a = list(zkp.generador_módulo_aleatorio(k, self.n))
+		self.a = list(generador_módulo_aleatorio(k,modbits))
 		assert sum([gcd(i, self.n) for i in self.a]) == len(self.a)
 		self.asq = [i**(2, self.n) for i in self.a]
         
@@ -192,8 +211,8 @@ class Alice(object):
 		print("PK = "+str(self.sk))
 		
 	def calcula_x(self):
-		firma = [ i-1 for i in list(zkp.generador_módulo_aleatorio(1, 3))]
-		rlist = list(zkp.generador_módulo_aleatorio(1, self.n))
+		firma = [ i-1 for i in list(generador_módulo_aleatorio(1, 3))]
+		rlist = list(generador_módulo_aleatorio(1, self.n))
 		self.r = rlist[0]
 		rsq = self.r**(2, self.n)
 		if(firma[0] == 0):
@@ -223,13 +242,13 @@ class Bob(object):
 			self.abort = 1
 			return []
 		self.x = x
-		self.a = [ i-1 for i in list(zkp.generador_módulo_aleatorio(k, 3))]
+		self.a = [ i-1 for i in list(generador_módulo_aleatorio(k, 3))]
 		#print(self.a)
 		return self.a
 	
 	def autentificación(self, y):
 		ysq = y**(2, self.n)
-		print("y^2 valor a ser comprobado = " + str(ysq))
+		# print("y^2 valor a ser comprobado = " + str(ysq))
 		yrhs = mod(1, self.n)
 		yrhs = yrhs*self.x
 		for i in range(self.k):
@@ -242,6 +261,7 @@ class Bob(object):
 
 
 class ZeroKnowledgeProofTest():
+    
 	def __init__(self, modbits, k, semilla, iterations):
 		zeroKnowledgeProof_generator = testSetUp(modbits, k, semilla)
 		alice = Alice(zeroKnowledgeProof_generator.n, zeroKnowledgeProof_generator.a)
@@ -258,7 +278,9 @@ class ZeroKnowledgeProofTest():
 				abort = 1
 			else:
 				y = alice.calcula_y(alist)
-				abort = bob.autentificación(y)
+				ysq = y**(2, bob.n)
+				print("y^2 valor a ser comprobado = " + str(ysq))
+				abort = bob.autentificación(y) 
 			if(abort == 1):
 				print("Fallo en la iteración " + str(i+1))
 			i += 1
@@ -273,32 +295,15 @@ class ZeroKnowledgeProofTest():
             
 
 
-class zkp():
-    
-    def generador_módulo_aleatorio(self, k, módulo):
-        num = 0
-        granPrimo = sympy.randprime(0, 1000000)
-        while(num < k):
-            a = mod(granPrimo, módulo)
-            while(gcd(a, módulo) != 1):
-                a = mod(granPrimo, módulo)
-            yield a
-            num += 1
 
-    def generador_módulo_aleatorio_mio(self):
-        num = 0
-        while(num < k):
-            a = np.int64(num)
-            yield a
-            num += 1
     
 
-    def vistaZkp(request):
+    
+def vistaZkp(request):
         pruebas = ['hola', 'adios']
         zkp2 = ZeroKnowledgeProofTest(modbits, k, semilla, iterations)
-        context = {'pruebas':pruebas}
+        context = {'pruebas':zkp2}
         return render(request, 'zkp.html', context)
-
 
 def menu(request):
     pruebas = ['hola', 'adios']
