@@ -13,5 +13,6 @@ urlpatterns = [
     #path('zkp/', views.zkpView, name='zkp'),
     path('zkp', zkpView.as_view(), name='zkp'),
     path('zkp/test', views.vistaZkp, name='zkp'),
-    path('menu', views.menu, name='menu')
+    path('menu', views.menu, name='menu'),
+    path('prueba/simetrica', views.vistaSimetrica, name='simetrica'),
 ]

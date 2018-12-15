@@ -1,0 +1,8 @@
+{% extends './baseOurs.html' %}
+{% block nav-asi %}<strong class="nav-active">Pruebas asimétricas</strong>{% endblock %}
+{% block content %}
+<h2> AES modo CBC simetrico </h2>
+    {% for elem in pruebas %}                
+        <p><li>{{elem}}</p></li></p>    
+    {% endfor %}          
+{% endblock %}
