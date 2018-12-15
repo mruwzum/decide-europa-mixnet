@@ -12,6 +12,9 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import HttpResponse
 
+from Crypto.Cipher import AES 
+import binascii,os
+
 import time
 from numpy import mod
 import numpy as np
@@ -317,9 +320,31 @@ class ZeroKnowledgeProofTest():
 		
 
 			
+def vistaSimetrica(request):
+	lista = []
+	texto = b"CristianRodrigu "
+	lista.append("Texto en claro: "+ str(texto)[2:][:-1])
+	key = b"00112233445566778899aabbccddeeff"
+	lista.append("Clave utilizada: "+ str(key)[2:][:-1])
+	iv = os.urandom(16)
+	lista.append("Vector de inicialización: "+ str(iv)[2:][:-1])
+	aes_mode = AES.MODE_CBC
+	obj = AES.new(key, aes_mode, iv)
+
+	ciphertext = obj.encrypt(texto)
+	print(ciphertext)
+	lista.append("Texto cifrado: "+ str(ciphertext)[2:][:-1])
 
 
-
+	cipher = AES.new(key, aes_mode, iv)
+	plaintext = cipher.decrypt(ciphertext)
+	print(plaintext)
+	lista.append("Texto en plano descifrado: "+str(plaintext)[2:][:-1]) 
+	if(plaintext == texto):
+		lista.append("Prueba realizada con exito, las cadenas coinciden")   
+	context = {'pruebas':lista}
+	
+	return render(request, 'simetrico.html', context)
 	
 
 	
