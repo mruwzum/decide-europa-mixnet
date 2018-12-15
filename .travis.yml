@@ -10,7 +10,6 @@ install:
 - pip install -r ../requirements.txt
 script:
  - cd mixnet
- - python3 zkp.py
  - cd ..
 services:
   - postgresql
@@ -24,3 +23,4 @@ before_script:
  - psql -c "create user decide with password 'decide'"
  - psql -c "create database decide owner decide"
  - python3 manage.py migrate
+ - python3 manage.py test mixnet.tests

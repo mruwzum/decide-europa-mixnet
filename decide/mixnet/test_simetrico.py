@@ -1,3 +1,4 @@
+from django.test import TestCase
 """
 from Crypto.Cipher import DES
 import os
@@ -15,8 +16,8 @@ from Crypto.Cipher import AES
 import binascii,os
 
 
-texto = "CristianRodrigu "
-key = "00112233445566778899aabbccddeeff"
+texto = b"CristianRodrigu "
+key = b"00112233445566778899aabbccddeeff"
 iv = os.urandom(16)
 aes_mode = AES.MODE_CBC
 obj = AES.new(key, aes_mode, iv)
