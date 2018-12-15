@@ -14,7 +14,7 @@ script:
 services:
   - postgresql
 addons:
-  postgresql: "10"
+  postgresql: "9.6"
 global:
   - PGPORT=5432
 before_script:
