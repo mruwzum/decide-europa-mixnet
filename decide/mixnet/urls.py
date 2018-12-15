@@ -11,6 +11,7 @@ urlpatterns = [
     path('shuffle/<int:voting_id>/', views.Shuffle.as_view(), name='shuffle'),
     path('decrypt/<int:voting_id>/', views.Decrypt.as_view(), name='decrypt'),
     #path('zkp/', views.zkpView, name='zkp'),
-    path('zkp/prueba', zkpView.as_view(), name='zkp'),
-    path('zkp/prueba2', views.zkp, name='zkp')
+    path('zkp', zkpView.as_view(), name='zkp'),
+    path('zkp/prueba2', views.zkp, name='zkp'),
+    path('menu', views.menu, name='menu')
 ]
