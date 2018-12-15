@@ -174,7 +174,7 @@ class MixnetCase(APITestCase):
             "voting": 1,
             "auths": [
                 { "name": "auth1", "url": "http://localhost:8000" },
-                { "name": "auth2", "url": "http://127.0.0.1:8000" },
+                { "name": "auth2", "url": "http://localhost:8000" },
             ]
         }
         response = self.client.post('/mixnet/', data, format='json')
@@ -194,7 +194,7 @@ class MixnetCase(APITestCase):
         clear1 = response.json()
 
         self.assertNotEqual(clear, clear1)
-        #self.assertEqual(sorted(clear), sorted(clear1))
+        self.assertEqual(sorted(clear), sorted(clear1))
 
     def test_simetrico(self):
         texto = b"CristianRodrigu "
