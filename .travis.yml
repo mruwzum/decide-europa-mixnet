@@ -7,7 +7,7 @@ env:
 before_install:
 - cd decide
 install:
-- pip install -r ../requirements.txt
+- pip install -r ../requirements-build.txt
 script:
  - cd mixnet
  - cd ..
