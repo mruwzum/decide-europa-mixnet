@@ -31,6 +31,21 @@ class PostProcView(APIView):
         options.sort(key=lambda x: -x['seats'])
         return Response(options)
 
+    def sainteLague(self, options, seats):
+        #Se añade un campo de escaños (seats) a cada una de las opciones
+        for opt in options:
+            opt['seats'] = 0
+
+        #Para cada uno de los escaños se calcula a que opción le correspondería el escaño 
+        #teniendo en cuenta los ya asignados
+        for i in range(seats):
+            max(options, 
+                key = lambda x : x['votes'] / (2 * x['seats'] + 1.0))['seats'] += 1
+
+        #Se ordenan las opciones por el número de escaños
+        options.sort(key=lambda x: -x['seats'])
+        return Response(options)
+
     def post(self, request):
         """
          * type: IDENTITY | EQUALITY | WEIGHT
@@ -52,6 +67,10 @@ class PostProcView(APIView):
 
         elif t == 'DHONDT':
             seats = int(float(request.data.get('seats', '8')))
-            return self.dhondt(opts,seats)            
+            return self.dhondt(opts,seats)
+
+        elif t == 'SAINTELAGUE':
+            seats = int(float(request.data.get('seats', '8')))
+            return self.sainteLague(opts)            
 
         return Response({})
