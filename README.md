@@ -1,4 +1,4 @@
-MIXNET: [![Build Status](https://travis-ci.com/mruwzum/decide-europa-mixnet.svg?branch=master)](https://travis-ci.com/mruwzum/decide-europa-mixnet)
+MIXNET:[![Build Status](https://travis-ci.com/mruwzum/decide-europa-mixnet.svg?branch=master)](https://travis-ci.com/mruwzum/decide-europa-mixnet)
 
 Plataforma voto electrónico educativa
 =====================================
