@@ -12,22 +12,19 @@ services:
 - postgresql
 env:
 - DJANGO_VERSION=2.0 DB=postgres
-env: 
-- DJANGO_VERSION=2.0 DB=postgres
 global:
--PGPORT=5432
+  - PGPORT=5432
 before_install: 
 - cd decide
 install: 
-- pip install -r ../requirements.txt
 - pip install -q Django==$DJANGO_VERSION
-before_script:
-- rm -f local_settings.py
-- cp -rf local_settings.travis.py local_settings.py
+before_script: 
+- cp local_settings.travis.py local_settings.py
 - psql -c "create user decide with password 'decide'"
+- psql -c "ALTER USER decide WITH SUPERUSER;"
 - psql -c "create database decide owner decide"
 - python manage.py migrate
 script: 
-- python3 manage.py test
+- python3 manage.py test postproc
 addons:
-  postgresql: '9.6'
+  postgresql: "9.6"
