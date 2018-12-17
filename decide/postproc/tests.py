@@ -75,7 +75,7 @@ class PostProcTestCase(APITestCase):
 		def test_sainte_lague(self):
         data = {
             "type": "SAINTELAGUE",
-            "seats": "8",
+            "seats": "20",
             "options": [
                 { "option": "Option 1", "number": 1, "votes": 5 },
                 { "option": "Option 2", "number": 2, "votes": 0 },
@@ -87,12 +87,12 @@ class PostProcTestCase(APITestCase):
         }
 
         expected_result = [
-            { "option": "Option 1", "number": 1, "votes": 5, "seats": 3 },
-            { "option": "Option 5", "number": 5, "votes": 5, "seats": 3 },
-            { "option": "Option 3", "number": 3, "votes": 3, "seats": 1 },
-            { "option": "Option 4", "number": 4, "votes": 2, "seats": 1 },
+            { "option": "Option 1", "number": 1, "votes": 5, "seats": 6 },
+            { "option": "Option 5", "number": 5, "votes": 5, "seats": 6 },
+            { "option": "Option 3", "number": 3, "votes": 3, "seats": 4 },
+            { "option": "Option 4", "number": 4, "votes": 2, "seats": 3 },
+            { "option": "Option 6", "number": 6, "votes": 1, "seats": 1 },
             { "option": "Option 2", "number": 2, "votes": 0, "seats": 0 },
-            { "option": "Option 6", "number": 6, "votes": 1, "seats": 0 },
         ]
 
         response = self.client.post("/postproc/", data, format="json")
