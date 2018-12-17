@@ -1,0 +1,14 @@
+<html>
+    <head>Mixnet Menu</head>
+    <body>
+        {% block nav %}
+        <ul id="nav">
+            <li>{% block nav-zkp %}<a href="zkp/test">Prueba de cero conocimiento (ZKP)</a>{% endblock %}</li>
+            <li>{% block nav-asi %}<a href="prueba/simetrica">Pruebas asimétricas</a>{% endblock %}</li>
+        </ul>
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

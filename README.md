@@ -1,3 +1,7 @@
+| MÓDULO       | ESTADO    | DESPLIEGUE |
+| :----------: |:----------:| :--------:|
+| **MIXNET**      | [![Build Status](https://travis-ci.com/mruwzum/decide-europa-mixnet.svg?branch=master)](https://travis-ci.com/mruwzum/decide-europa-mixnet) | ![Heroku](http://heroku-badge.herokuapp.com/?app=heroku-badge&root=https://decide-europa-mixnet.herokuapp.com/mixnet/menu) |
+
 Plataforma voto electrónico educativa
 =====================================
 

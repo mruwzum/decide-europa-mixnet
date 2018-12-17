@@ -1,3 +1,4 @@
+from mixnet.test_zkp import ZeroKnowledgeProofTest as ZPT
 from django.test import TestCase
 from django.conf import settings
 from rest_framework.test import APIClient
@@ -6,7 +7,14 @@ from rest_framework.test import APITestCase
 from mixnet.mixcrypt import MixCrypt
 from mixnet.mixcrypt import ElGamal
 
+from Crypto.Cipher import AES 
+import binascii,os
+
 from base import mods
+
+
+import time
+import sympy
 
 
 class MixnetCase(APITestCase):
@@ -18,7 +26,7 @@ class MixnetCase(APITestCase):
     def tearDown(self):
         self.client = None
 
-    def encrypt_msgs(self, msgs, pk, bits=settings.KEYBITS):
+    def encrypt_msgs(self, msgs, pk, bits=256):
         p, g, y = pk
         k = MixCrypt(bits=bits)
         k.k = ElGamal.construct((p, g, y))
@@ -101,7 +109,6 @@ class MixnetCase(APITestCase):
         self.assertNotEqual(clear, clear2)
 
         self.assertEqual(sorted(clear), sorted(clear2))
-
     def test_multiple_auths(self):
         '''
         This test emulates a two authorities shuffle and decryption.
@@ -158,33 +165,73 @@ class MixnetCase(APITestCase):
         self.assertNotEqual(clear, clear2)
         self.assertEqual(sorted(clear), sorted(clear2))
 
-    def test_multiple_auths_mock(self):
-        '''
-        This test emulates a two authorities shuffle and decryption.
-        '''
+    # def test_multiple_auths_mock(self):
+    #     '''
+    #     This test emulates a two authorities shuffle and decryption.
+    #     '''
 
-        data = {
-            "voting": 1,
-            "auths": [
-                { "name": "auth1", "url": "http://localhost:8000" },
-                { "name": "auth2", "url": "http://127.0.0.1:8000" },
-            ]
-        }
-        response = self.client.post('/mixnet/', data, format='json')
-        key = response.json()
-        pk = key["p"], key["g"], key["y"]
+    #     data = {
+    #         "voting": 1,
+    #         "auths": [
+    #             { "name": "auth1", "url": "http://localhost:8000" },
+    #             { "name": "auth2", "url": "http://localhost:8000" },
+    #         ]
+    #     }
+    #     response = self.client.post('/mixnet/', data, format='json')
+    #     key = response.json()
+    #     pk = key["p"], key["g"], key["y"]
 
-        clear = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-        encrypt = self.encrypt_msgs(clear, pk)
+    #     clear = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+    #     encrypt = self.encrypt_msgs(clear, pk)
 
-        data = { "msgs": encrypt, "pk": key }
-        response = self.client.post('/mixnet/shuffle/1/', data, format='json')
-        shuffled = response.json()
-        self.assertNotEqual(shuffled, encrypt)
+    #     data = { "msgs": encrypt, "pk": key }
+    #     response = self.client.post('/mixnet/shuffle/1/', data, format='json')
+    #     shuffled = response.json()
+    #     self.assertNotEqual(shuffled, encrypt)
 
-        data = { "msgs": shuffled, "pk": key }
-        response = self.client.post('/mixnet/decrypt/1/', data, format='json')
-        clear1 = response.json()
+    #     data = { "msgs": shuffled, "pk": key }
+    #     response = self.client.post('/mixnet/decrypt/1/', data, format='json')
+    #     clear1 = response.json()
 
-        self.assertNotEqual(clear, clear1)
-        self.assertEqual(sorted(clear), sorted(clear1))
+    #     self.assertNotEqual(clear, clear1)
+    #     self.assertEqual(sorted(clear), sorted(clear1))
+
+    def test_simetrico(self):
+        texto = b"CristianRodrigu "
+        key = b"00112233445566778899aabbccddeeff"
+        iv = os.urandom(16)
+        aes_mode = AES.MODE_CBC
+        obj = AES.new(key, aes_mode, iv)
+        #Cifrado: 
+        # 1- El vector de inicialización iv entra al criptosistema con la clave K, esto nos resultará en un S1
+        # 2- Se operará S1 XOR texto[1]  resultará en el criptosistema 1 encriptado = C1
+        # 3- C1 vuelve a entrar al cipher con la clave y se obtiene un s2
+        # 4- Este s2 se vuelve a realizar una XOR con texto[2]
+        #El ciclo se repite hasta encriptar todo el mensaje. Es un cifrado en secuencia.
+        #Secuencia resultante = b'\x16\x18\xd9\xdcv6\x81\xf8$\xe8\xbd\x0e\x15\x1cKB'
+        ciphertext = obj.encrypt(texto)
+        #print(ciphertext)
+
+        #Descifrado:
+        # A partir de los bloques obtenidos del cifrado operaremos de la siguiente manera
+        # 1- iv (vector de inicialización) con la clave k entran al criptosistema => S1
+        # 2- S1 XOR c1(bloque cifrado) = mensaje en claro
+        # 3- C1 con k entran al criptosistema => S2
+        # 4- S2 XOR c2 = mensaje en claro 
+        cipher = AES.new(key, aes_mode, iv)
+        plaintext = cipher.decrypt(ciphertext)
+        #print(plaintext)
+        self.assertEqual(texto, plaintext)
+
+    def test_zkp(self):
+        modbits = 256
+        k = 40
+        iterations = 20
+        primePrime = sympy.randprime(0, 9999999999)
+        semilla = int(round(time.time() * primePrime))
+        res = ZPT(modbits, k, semilla, iterations)
+        self.assertEqual(res.statusValue(), 0)
+
+
+
+
