@@ -5,16 +5,11 @@ from rest_framework.response import Response
 class PostProcView(APIView):
 
     def identity(self, options):
-        out = []
-
         for opt in options:
-            out.append({
-                **opt,
-                'postproc': opt['votes'],
-            });
+            opt['postproc'] = opt['votes']
 
-        out.sort(key=lambda x: -x['postproc'])
-        return Response(out)
+        options.sort(key=lambda x: -x['postproc'])
+        return Response(options)
 
     def dhondt(self, options, seats):
         #Se añade un campo de escaños (seats) a cada una de las opciones
