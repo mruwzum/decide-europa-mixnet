@@ -366,3 +366,4 @@ def cargarpk(request):
 		form.save()
 	context = {'form':form}
 	return render(request,'cargarPk.html',context)
+

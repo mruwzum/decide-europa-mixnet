@@ -86,6 +86,5 @@ class Mixnet(models.Model):
 class Valores(models.Model):
     p = models.CharField(default = 0, max_length=10)
     g = models.CharField(default = 0, max_length=10)
-    n = models.CharField(default = 0, max_length=10)
     def __str__(self):
-        return 'PK: ' + str(self.p) + ', '+ str(self.g)+ ', ' + str(self.n) + '.'
+        return 'PK: ' + str(self.p) + ', '+ str(self.g)+ '.'
