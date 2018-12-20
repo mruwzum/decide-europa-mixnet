@@ -15,4 +15,5 @@ urlpatterns = [
     path('zkp/test', views.vistaZkp, name='zkp'),
     path('menu', views.menu, name='menu'),
     path('prueba/simetrica', views.vistaSimetrica, name='simetrica'),
+    path('cargarpk', views.cargarpk, name='cargarpk'),
 ]
