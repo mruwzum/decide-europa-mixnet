@@ -76,10 +76,14 @@ class testSetUp:
 		
 #Parte del algoritmo que se encarga de verificar la integridad de las claves	
 class Alice:
-	def __init__(self, n, sk):
+	p = 178
+	g = 33
+	n = 120
+	nuestrak = np.array([p,g,n],dtype=np.int64)
+	def __init__(self, n, sk, nuestrak):
 		self.n = n
-		self.sk = sk
-		# self.sk = np.array([179,179,179,179], dtype=np.int64)
+		#self.sk = sk
+		self.sk = nuestrak
 		#self.sk = np.array([179], dtype=np.int64)
 		self.k = len(sk)
 		#print("PK = "+str(self.sk))

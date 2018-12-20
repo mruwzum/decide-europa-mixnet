@@ -15,6 +15,8 @@ from django.http import HttpResponse
 from Crypto.Cipher import AES 
 import binascii,os
 
+from .forms import *
+
 import time
 from numpy import mod
 import numpy as np
@@ -358,3 +360,9 @@ def menu(request):
 	context = {'pruebas':pruebas}
 	return render(request, 'menu.html', context)
 
+def cargarpk(request):
+	form = ValoresForm(request.GET)
+	if form.is_valid():
+		form.save()
+	context = {'form':form}
+	return render(request,'cargarPk.html',context)
