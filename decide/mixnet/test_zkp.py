@@ -78,11 +78,12 @@ class testSetUp:
 class Alice:
 	p = 178
 	g = 33
-	n = 120
-	nuestrak = np.array([p,g,n],dtype=np.int64)
-	def __init__(self, n, sk, nuestrak):
+	#n = 120
+	
+	def __init__(self, n, sk, p, g):
 		self.n = n
 		#self.sk = sk
+		nuestrak = np.array([p,g,n],dtype=np.int64)
 		self.sk = nuestrak
 		#self.sk = np.array([179], dtype=np.int64)
 		self.k = len(sk)
