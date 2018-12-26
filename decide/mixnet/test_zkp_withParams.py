@@ -76,13 +76,14 @@ class testSetUp:
 		
 #Parte del algoritmo que se encarga de verificar la integridad de las claves	
 class Alice:
-	def __init__(self, n, sk, p, g):
+	sk = np.array([173,33],dtype=np.int64)
+	def __init__(self, n, p, g):
 		self.n = n
 		#self.sk = sk
 		nuestrak = np.array([p,g],dtype=np.int64)
 		self.sk = nuestrak
 		#self.sk = np.array([179], dtype=np.int64)
-		self.k = len(sk)
+		self.k = len(self.sk)
 		#print("PK = "+str(self.sk))
 		
 	def calcula_x(self):
@@ -138,13 +139,17 @@ class Bob:
 class ZeroKnowledgeProofTestParams():
 	resultadoFinalParaVista = []
 	def __init__(self, modbits, k, semilla, iterations, p, g):
-		zeroKnowledgeProof_generator = testSetUp(modbits, k, semilla.p,g)
-		alice = Alice(zeroKnowledgeProof_generator.n, zeroKnowledgeProof_generator.a, p, g)
+		zeroKnowledgeProof_generator = testSetUp(modbits, k, semilla,p,g)
+
+		alice = Alice(zeroKnowledgeProof_generator.n, p, g)
 		bob = Bob(zeroKnowledgeProof_generator.n, zeroKnowledgeProof_generator.asq)
 		#Comienzo del protocolo
 		resultadoFinal = []
 		resultadoFinal.append("------------------- VARIABLES DE LAS PRUEBAS -------------------")
-		resultadoFinal.append("p: " + str(zeroKnowledgeProof_generator.p))
+		resultadoFinal.append("Original P: " + str(p))
+		resultadoFinal.append("Original G: " + str(g))
+		resultadoFinal.append("--------------------------------------")
+		resultadoFinal.append("p prime: " + str(zeroKnowledgeProof_generator.p))
 		resultadoFinal.append("q: " + str(zeroKnowledgeProof_generator.q))
 		resultadoFinal.append("n: " + str(zeroKnowledgeProof_generator.n))
 		resultadoFinal.append("a: " + str(zeroKnowledgeProof_generator.a[0]))

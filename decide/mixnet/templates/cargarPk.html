@@ -1,7 +1,7 @@
 {% extends './baseOurs.html' %}
-{% block nav-asi %}<strong class="nav-active">Prueba ZKP</strong>{% endblock %}
+{% block nav-zkpParam %}<strong class="nav-active">Prueba ZKP</strong>{% endblock %}
 {% block content %}
-<h2> Introduzca la clave privada: </h2>
+<h2> Introduzca la clave privadan (G debe de ser un primo): </h2>
     <form method="GET"> {% csrf_token %}
         {{form.as_p}}
             <input type="submit" value="Send and test"/>

@@ -236,9 +236,9 @@ def cargarpk(request):
 	g = form['g'].value()
 
 	if p is None:
-		p = 178
+		p = 133
 	if g is None:
-		g = 33
+		g = 21
 
 	zkpB = ZkpParams(modbits, k, semilla, iterations, p , g)
 	context = {'pruebas':zkpB.returnresultado(),'form':form}
