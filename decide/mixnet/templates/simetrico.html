@@ -1,6 +1,15 @@
 {% extends './baseOurs.html' %}
 {% block nav-asi %}<strong class="nav-active">Pruebas asimétricas</strong>{% endblock %}
 {% block content %}
+
+{% block add_movie %}
+    <form method="GET"> {% csrf_token %} 
+    {{form.as_p}}
+        <input type="submit" value="Cifra"  />
+    </form>
+{% endblock add_movie %}
+
+
 <h2> AES modo CBC simetrico </h2>
     {% for elem in pruebas %}                
         <p><li>{{elem}}</p></li></p>    

@@ -88,3 +88,9 @@ class Valores(models.Model):
     g = models.CharField(default = 0, max_length=10)
     def __str__(self):
         return 'PK: ' + str(self.p) + ', '+ str(self.g)+ '.'
+
+
+class Asimetrico(models.Model):
+    p = models.CharField(default = 0, max_length = 20)
+    def __str__(self):
+        return 'Palabra: '+self.p
