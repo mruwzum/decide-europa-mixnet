@@ -56,7 +56,7 @@ def generador_módulo_aleatorio_mio():
 class testSetUp:
 	#Inicialización de las variables que se van a utilizar a lo largo de la
 	#ejecución de las pruebas de cero conocimiento.
-	def __init__(self, modbits, k, semilla):
+	def __init__(self, modbits, k, semilla,p,g):
 		self.k = k
 		granPrimo = sympy.randprime(0, 1000000)
 		random.seed(semilla)
@@ -76,11 +76,11 @@ class testSetUp:
 		
 #Parte del algoritmo que se encarga de verificar la integridad de las claves	
 class Alice:
-	
-	def __init__(self, n, sk):
+	def __init__(self, n, sk, p, g):
 		self.n = n
-		self.sk = sk
-	
+		#self.sk = sk
+		nuestrak = np.array([p,g],dtype=np.int64)
+		self.sk = nuestrak
 		#self.sk = np.array([179], dtype=np.int64)
 		self.k = len(sk)
 		#print("PK = "+str(self.sk))
@@ -134,11 +134,12 @@ class Bob:
 		else:
 			return 1
 
-class ZeroKnowledgeProofTest():
+
+class ZeroKnowledgeProofTestParams():
 	resultadoFinalParaVista = []
-	def __init__(self, modbits, k, semilla, iterations):
-		zeroKnowledgeProof_generator = testSetUp(modbits, k, semilla)
-		alice = Alice(zeroKnowledgeProof_generator.n, zeroKnowledgeProof_generator.a)
+	def __init__(self, modbits, k, semilla, iterations, p, g):
+		zeroKnowledgeProof_generator = testSetUp(modbits, k, semilla.p,g)
+		alice = Alice(zeroKnowledgeProof_generator.n, zeroKnowledgeProof_generator.a, p, g)
 		bob = Bob(zeroKnowledgeProof_generator.n, zeroKnowledgeProof_generator.asq)
 		#Comienzo del protocolo
 		resultadoFinal = []
@@ -188,9 +189,10 @@ class ZeroKnowledgeProofTest():
 		resultadoFinal = self.resultadoFinalParaVista
 		return resultadoFinal
 
-		
+
 modbits = 256
 k = 40
 iterations = 20
-zkp = ZeroKnowledgeProofTest(modbits, k, semilla, iterations)
+
+# zkp = ZeroKnowledgeProofTestParams(modbits, k, semilla, iterations, p ,g)
 
