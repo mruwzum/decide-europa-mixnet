@@ -163,8 +163,27 @@ class zkpView(TemplateView):
 		return context
 			
 def vistaSimetrica(request):
+	form = ValorSimetrico(request.GET) #definiendo aquí el methodo request.GET se consigue el valor del formulario
+	palabra = form['p'].value()
+
+	print(palabra)
+
+	if(palabra is None):
+		palabra = "                "
+	
+	if(len(palabra) < 16):
+		palabra = palabra + "                      "
+
+	if(len(palabra) > 16):
+		palabra = palabra[0:16]
+	
+
+
 	lista = []
-	texto = b"CristianRodrigu "
+	#texto = b"palabra         "
+	
+	b = bytes(palabra, 'utf-8')
+	texto = b
 	lista.append("Texto en claro: "+ str(texto)[2:][:-1])
 	key = b"00112233445566778899aabbccddeeff"
 	lista.append("Clave utilizada: "+ str(key)[2:][:-1])
@@ -184,7 +203,7 @@ def vistaSimetrica(request):
 	lista.append("Texto en plano descifrado: "+str(plaintext)[2:][:-1]) 
 	if(plaintext == texto):
 		lista.append("Prueba realizada con exito, las cadenas coinciden")   
-	context = {'pruebas':lista}
+	context = {'pruebas':lista, 'form':form}
 	
 	return render(request, 'simetrico.html', context)
 	
@@ -225,11 +244,4 @@ def cargarpk(request):
 	context = {'pruebas':zkpB.returnresultado(),'form':form}
 	return render(request,'cargarPk.html',context)
 
-def devuelveResZkp(request):
-	form = ValoresForm(request.GET)
-	p = form['p'].value()
-	g = form['g'].value()
-	zkpB = ZkpParams(modbits, k, semilla, iterations, p , g)
-	context = {'pruebas':zkpB.returnresultado()}
-	return render(request, 'zkp.html', context)
 
