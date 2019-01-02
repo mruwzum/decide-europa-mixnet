@@ -1,0 +1,37 @@
+language: python
+python:
+- '3.6'
+- '3.5'
+matrix:
+  include:
+  - python: 3.7.1
+    dist: xenial
+    sudo: true
+services:
+- postgresql
+env:
+- DJANGO_VERSION=2.0 DB=postgres
+global:
+- PGPORT=5432
+before_install:
+- cd decide
+install:
+- pip install -q -r ../requirements.txt
+- pip install -q Django==$DJANGO_VERSION
+before_script:
+- rm -f local_settings.py
+- cp -rf local_settings.travis.py local_settings.py
+- psql -c "create user decide with password 'decide'"
+- psql -c "create database decide owner decide"
+- python manage.py migrate
+script:
+- python manage.py test
+addons:
+  postgresql: '9.6'
+deploy:
+  skip_cleanup: true
+  provider: heroku
+  api_key:
+    secure: CuNl8EfdaCIfXDsLa0QC75raI+X/fhTWHI/50oTVGGMsfxI7hWpdqvE8KaltxKRBdOu+LgrDnofLd9kUO58NL/eIzhzJvF6DmjAuCyTsZwbbcKasSkK8YWbKHYruViCQJnTYODTlr89DLfvDqv8qbhzmtRp1YoJjxiV/1XdtAjcpmaMlkMNFgPScFLP/qWUYLANTQcX1AFIdVDRqGVCDfVPz5qAuB8vAtJCy2M7nH0FV7ZwH6MWMzMl+gIQnJxPHGa2BF3TjD2WODse96z3yNakIaHXuTPNbHg8Qs011LphIC1wBiZnkjZbG7KcN1AF1ha3Qw0ial1gO7pPkyPQeli06Yr8iShNTXHqbVHSZzPQZcuq87Ngm2ZGbENvRamhX33zrjgoEeu4qzIysngP727Pk49z6vmasA+IDqYtHcFN+4u7XcjBAw07JPrXcyxDg73SBECQ4/Bqlxb/1bjIPTNlDZGsJBM3yQoYX02iK7ZbERD0YWfREuLUpO84B8IeFV98NM+NRaeMO/0XbVGZhsFc0ySUgu+YvLUQ2x4C+ceTLRWaDK0HIAUpVJa1wwwW5A2/K7nNdpWRhb6BtsXXBIdfkADEn/ibQuda3qC1ealhkxWY2KQgUmtIVbUAsH8tNRE44jcOmLCd7LDtSbNahPpvbUTNhtpp6sDNpRrBTmbE=
+  app: decide-europa
+  strategy: git
