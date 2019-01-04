@@ -1,6 +1,7 @@
 language: python
 python:
 - '3.6'
+- '3.5'
 matrix:
   include:
   - python: 3.7.1
@@ -12,19 +13,21 @@ env:
 - DJANGO_VERSION=2.0 DB=postgres
 global:
 - PGPORT=5432
-before_install: 
+before_install:
 - cd decide
-install: 
+install:
 - pip install -q -r ../requirements.txt
-before_script: 
+- pip install -q Django==$DJANGO_VERSION
+before_script:
+- rm -f local_settings.py
+- cp -rf local_settings.travis.py local_settings.py
 - psql -c "create user decide with password 'decide'"
-- psql -c "ALTER USER decide WITH SUPERUSER;"
 - psql -c "create database decide owner decide"
 - python manage.py migrate
-script: 
+script:
 - python manage.py test
 addons:
-    postgresql: '9.6'
+  postgresql: '9.6'
 deploy:
   skip_cleanup: true
   provider: heroku
