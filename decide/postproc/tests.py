@@ -37,11 +37,11 @@ class PostProcTestCase(APITestCase):
 			{ "option": "Option 2", "number": 2, "votes": 0, "postproc": 0 }
 		]
 
-        response = self.client.post('/postproc/', data, format='json')
-        self.assertEqual(response.status_code, 200)
+		response = self.client.post('/postproc/', data, format='json')
+		self.assertEqual(response.status_code, 200)
 
-        values = response.json()
-        self.assertEqual(values, expected_result)
+		values = response.json()
+		self.assertEqual(values, expected_result)
 
 	def test_dhondt(self):
 		data = {
