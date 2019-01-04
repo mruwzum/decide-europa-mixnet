@@ -11,11 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-try:
-    import django_heroku
-    imported = True
-except ImportError:
-    imported = False
+
     
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,11 +69,7 @@ MODULES = [
     'voting',
 ]
 
-if(imported):
-    BASEURL = 'https://decide-europa-postproc.herokuapp.com/'
-else:
-    BASEURL = 'http://localhost:8000'
-APIS = {}
+BASEURL = 'https://decide-europa.herokuapp.com'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -172,5 +164,5 @@ INSTALLED_APPS = INSTALLED_APPS + MODULES
 
 APIS = {}
 
-if(imported):
-    django_heroku.settings(locals())
+import django_heroku
+django_heroku.settings(locals())
