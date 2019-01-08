@@ -14,7 +14,7 @@ import os
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(file)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -69,9 +69,9 @@ MODULES = [
     'voting',
 ]
 
+BASEURL = 'https://decide-europa-mixnet.herokuapp.com'
 
-BASEURL = 'https://decide-europa.herokuapp.com'
-
+APIS = {}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -164,8 +164,11 @@ except ImportError:
 
 INSTALLED_APPS = INSTALLED_APPS + MODULES
 
-APIS = {}
-
-import django_heroku
-django_heroku.settings(locals())
-
+# import django_heroku
+# django_heroku.settings(locals())# Try to import django-heroku depending on Travis or Heroku
+try:
+    # Configure Django App for Heroku.
+    import django_heroku
+    django_heroku.settings(locals())
+except ImportError:
+    found = False
