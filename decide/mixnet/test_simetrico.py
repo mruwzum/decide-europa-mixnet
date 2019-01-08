@@ -8,7 +8,7 @@ key = b'-8B key-'
 cipher = DES.new(key, DES.MODE_OFB)
 plaintext = b'sona si latine loqueris '
 msg = cipher.iv + cipher.encrypt(plaintext) #iv hace referencia al vector de inicialización del algoritmo DES
-
+//TEST
 print(msg)
 """
 #pip3 install pycryptodome añadir al requirements
