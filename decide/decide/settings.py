@@ -69,9 +69,9 @@ MODULES = [
     'voting',
 ]
 
-BASEURL = 'https://decide-europa-mixnet.herokuapp.com'
 
-APIS = {}
+BASEURL = 'https://decide-europa.herokuapp.com'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -164,13 +164,8 @@ except ImportError:
 
 INSTALLED_APPS = INSTALLED_APPS + MODULES
 
-# import django_heroku
-# django_heroku.settings(locals())
+APIS = {}
 
-# Try to import django-heroku depending on Travis or Heroku
-try:
-    # Configure Django App for Heroku.
-    import django_heroku
-    django_heroku.settings(locals())
-except ImportError:
-    found = False
+import django_heroku
+django_heroku.settings(locals())
+
